@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Chess</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(8, minmax(0, 1fr));
+            width: 700px;
+            height: 700px;
+            transform: rotate(0deg);
+        }
+
+        .piece.white {
+            color: white;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 1));
+        }
+
+        .piece.black {
+            color: black;
+        }
+
+        .flipped {
+            transform: rotate(180deg);
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .square.light {
+            background-color: #f0d9b5;
+        }
+
+        .square.dark {
+            background-color: #b58863;
+        }
+
+        .piece {
+            font-size: 60px;
+            cursor: pointer;
+        }
+
+        .piece.draggable {
+            cursor: grab;
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
+
+        .flipped .piece {
+            transform: rotate(180deg);
+        }
+
+        .highlight-move {
+            outline: 3px solid rgba(255, 255, 0, 0.6);
+        }
+
+        .highlight-legal {
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .status-box {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 800px;
+            background-color: rgba(50, 50, 50, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-column {
+            flex: 1;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .status-column.check {
+            background-color: rgba(255, 0, 0, 0.7);
+        }
+
+        .move-indicator, .win-percentage {
+            background-color: rgba(0, 128, 0, 0.7);
+        }
+
+        .win-percentage {
+            font-weight: bold;
+        }
+
+        .point-counter {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: white;
+            padding: 10px 20px;
+            background-color: rgba(128, 128, 128, 0.7);
+            border-radius: 5px;
+        }
+
+        #whitePoints {
+            left: 10px;
+        }
+
+        #blackPoints {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="w-full h-screen flex items-center justify-center bg-zinc-900 relative">
+    <div class="chessboard w-96 h-96 bg-red-800"></div>
+    <div class="status-box">
+        <div class="status-column" id="gameStatus"></div>
+        <div class="status-column move-indicator" id="moveIndicator">Waiting for game to start...</div>
+        <div class="status-column win-percentage" id="winPercentage"></div>
+    </div>
+    <div class="point-counter" id="whitePoints">White: 0 pts</div>
+    <div class="point-counter" id="blackPoints">Black: 0 pts</div>
+</div>
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/chessgame.js"></script>
+</body>
+</html>
