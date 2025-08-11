@@ -6,6 +6,21 @@ This project demonstrates foundational **Data Structures and Algorithms (DSA)** 
 It features drag-and-drop gameplay, role assignment (White, Black, or Spectator), and a basic AI-driven win percentage calculator.  
 Designed as a portfolio piece to highlight **DSA and AI** skills.
 
+
+---
+## 📂 Project Structure
+
+```plaintext
+.
+├── public/
+│   └── js/
+│       └── chessgame.js     # Client-side game logic & UI
+├── views/
+│   └── index.ejs            # Main game page
+├── app.js                   # Server-side WebSocket & game logic
+├── package.json
+└── vercel.json              # Deployment config
+```
 ---
 
 ## 🚀 Features
@@ -97,3 +112,5 @@ npm install
 
 # Run server
 node app.js
+```
+start playing at : http://localhost:3000
