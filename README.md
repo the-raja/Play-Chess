@@ -1,58 +1,99 @@
-# Chess Game - DSA Showcase
+# ♟️ Chess Game - DSA and AI Showcase
 
-This is a real-time, multi-player chess game built with Node.js, Express, Socket.io, and Chess.js, designed to demonstrate my proficiency in Data Structures and Algorithms (DSA). The project features a drag-and-drop interface, real-time move synchronization, and a basic AI evaluation system using advanced DSA techniques. It serves as a portfolio piece to highlight my skills in algorithm design and optimization.
+A real-time, multi-player chess game built with **Node.js**, **Express**, **Socket.io**, and **Chess.js**.  
+This project demonstrates foundational **Data Structures and Algorithms (DSA)** and **Artificial Intelligence (AI)** concepts through move evaluation, game tree search, and state management.  
 
-## Features
-- Real-time multiplayer gameplay via WebSockets (Socket.io).
-- Drag-and-drop move mechanics with legal move highlighting.
-- Role assignment (White, Black, or Spectator) for multiple players.
-- AI-driven win percentage calculation using a custom evaluation function.
-- Move history tracking and capture point system.
-- DSA-focused implementation for move evaluation and state management.
+It features drag-and-drop gameplay, role assignment (White, Black, or Spectator), and a basic AI-driven win percentage calculator.  
+Designed as a portfolio piece to highlight **DSA and AI** skills.
 
-## Technologies Used
-- **Frontend**: HTML, CSS (with Tailwind CSS), JavaScript
-- **Backend**: Node.js, Express
-- **Real-time Communication**: Socket.io
-- **Chess Logic**: Chess.js
-- **Deployment**: Vercel (frontend), Heroku/Render (backend)
+---
 
-## DSA Highlights
-This project showcases several DSA concepts, implemented to optimize chess move evaluation and game state management:
+## 🚀 Features
 
-1. **MinHeap (Priority Queue)**:
-   - **Implementation**: A custom `MinHeap` class with `push`, `pop`, `bubbleUp`, and `bubbleDown` methods.
-   - **Usage**: Used in the `buildMoveTree` function to prioritize moves based on their evaluation scores during the Minimax algorithm.
-   - **Complexity**: O(log n) for `push` and `pop` operations, ensuring efficient move selection.
-   - **Purpose**: Enables the AI to quickly identify the best or worst move for the maximizing/minimizing player.
+- **Real-time multiplayer** via WebSockets for synchronized moves across players.  
+- **Intuitive drag-and-drop interface** with legal move highlighting.  
+- **Automatic role assignment** for White, Black, or Spectator.  
+- **Capture point tracking** and game status updates (check, checkmate, stalemate).  
+- **Flipped board view** for the Black player.  
+- **Basic AI evaluation** to display win percentage based on board position.  
 
-2. **Minimax Algorithm**:
-   - **Implementation**: Recursively implemented in `buildMoveTree` to evaluate all possible moves up to a depth of 2 or 3.
-   - **Usage**: Simulates game outcomes by alternating between maximizing (White) and minimizing (Black) scores.
-   - **Complexity**: O(b^d), where `b` is the branching factor (~35 moves) and `d` is the depth, optimized with shallow depth for performance.
-   - **Purpose**: Provides the foundation for the win percentage calculation by predicting future board states.
+---
 
-3. **Map (Hash Table)**:
-   - **Implementation**: A `moveTree` `Map` stores FEN strings as keys and inner `Map`s of moves to evaluations as values.
-   - **Usage**: Caches move evaluations for each board state to avoid redundant calculations.
-   - **Complexity**: O(1) average case for `set` and `get` operations.
-   - **Purpose**: Enhances efficiency by reusing prior evaluations, though fully utilized as a transposition table in this implementation.
+## 🧠Algorithm Details
 
-4. **Array (Stack)**:
-   - **Implementation**: A `moveStack` array stores FEN strings after each move.
-   - **Usage**: Tracks the game’s move history for potential undo functionality or analysis.
-   - **Complexity**: O(1) for push operations.
-   - **Purpose**: Provides a foundation for future enhancements like move rollback.
 
-## Prerequisites
-- Node.js (v14.x or higher)
-- Git
-- Vercel CLI (for frontend deployment)
-- Heroku CLI or Render account (for backend deployment)
+### 🧠 Minimax Algorithm — How It Works:
+- For each move, it temporarily applies the move (`chess.move()`), recursively evaluates the next position, and undoes the move (`chess.undo()`).
+- A **MinHeap** is used to store and prioritize moves based on their evaluation scores.
+- The final evaluation (`eval`) is the maximum or minimum score, depending on whether the player is maximizing or minimizing.
 
-## Installation
+This allows the game to predict the win percentage (`calculateWinPercentage`) by simulating future board states, giving an indication of which side has the advantage.
 
-### Clone the Repository
+---
+
+### 📊 Evaluation Function
+**Implementation:**  
+The `evaluateBoard` function assigns scores based on **piece values** (`PIECE_VALUES`) and **positional bonuses** (`POSITIONAL_BONUSES`).
+
+**How It Works:**  
+- Iterates over the 8x8 board, calculating a score that reflects the **material advantage** (e.g., a queen is worth 9 points) and **positional strength** (e.g., pawns are valued higher in the center).  
+- A small penalty is added if the current player is in check.
+
+---
+
+## 📚 Data Structures Used
+
+### 1. MinHeap (Priority Queue)
+- **Methods:** `push`, `pop`, `bubbleUp`, `bubbleDown`  
+- **Usage:** In `buildMoveTree` to store and sort move-evaluation pairs.  
+- **Complexity:**  
+  - Push / Pop → **O(log n)**  
+  - `isEmpty` → **O(1)**  
+
+---
+
+### 2. Minimax Algorithm
+- Recursive game tree traversal alternating between maximizing and minimizing scores.
+- Integrated with **MinHeap** for optimal move ordering.
+- **Complexity:** O(b^d) where:
+  - **b** ≈ branching factor (~35 moves)
+  - **d** = depth (2 or 3)
+
+---
+
+### 3. Map (Hash Table)
+- **Implementation:** Stores move evaluations using FEN strings as keys.
+- **Purpose:** Caches evaluations for board states.
+- **Complexity:** O(1) average for set/get operations.
+
+---
+
+### 4. Array (Stack)
+- **Implementation:** `moveStack` stores FEN strings after each move.
+- **Purpose:** Tracks game history.
+- **Complexity:** O(1) for push.
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend:** HTML, Tailwind CSS, JavaScript  
+**Backend:** Node.js, Express  
+**Real-time:** Socket.IO  
+**Chess Logic:** Chess.js  
+**Deployment:** Vercel (frontend), Render / Heroku (backend)
+
+---
+
+## ⚙️ Installation
+
 ```bash
+# Clone repo
 git clone https://github.com/your-username/chess-game.git
 cd chess-game
+
+# Install dependencies
+npm install
+
+# Run server
+node app.js
