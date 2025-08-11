@@ -62,11 +62,7 @@ io.on("connection", function (uniqueSocket) {
     });
 });
 
-if (process.env.VERCEL) {
-    module.exports = app; // Export for Vercel serverless
-} else {
-    const port = process.env.PORT || 3000;
-    server.listen(port, function () {
-        console.log(`Server running at ${port}`);
-    });
-}
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
