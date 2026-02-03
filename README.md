@@ -2,7 +2,7 @@
 
 A web-based, real-time multiplayer chess game built with Node.js, Express, and Socket.io. This project features a client-side AI that calculates win probability based on a sophisticated heuristic evaluation function.
 
-[Link to Live Demo]() <!-- Add your Vercel deployment link here -->
+[Link to Live Demo](https://chess-18sx.onrender.com) <!-- Add your Vercel deployment link here -->
 
 ## Features
 
