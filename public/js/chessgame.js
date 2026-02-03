@@ -72,6 +72,101 @@ const POSITIONAL_BONUSES = {
     b: [-0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2, -0.1, 0, 0, 0, 0, 0, 0, -0.1, -0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.1, -0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, -0.1, -0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, -0.1, -0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.1, -0.1, 0, 0, 0, 0, 0, 0, -0.1, -0.2, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.2]
 };
 
+const calculatePawnStructure = (board, color) => {
+    let score = 0;
+    const pawnFiles = {};
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const square = board[i][j];
+            if (square && square.type === 'p' && square.color === color) {
+                if (pawnFiles[j]) {
+                    score -= 0.5; // Doubled pawns
+                }
+                pawnFiles[j] = true;
+            }
+        }
+    }
+    return score;
+};
+
+const calculateKingSafety = (board, color) => {
+    let score = 0;
+    let kingPos = null;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const square = board[i][j];
+            if (square && square.type === 'k' && square.color === color) {
+                kingPos = { row: i, col: j };
+                break;
+            }
+        }
+        if (kingPos) break;
+    }
+
+    if (kingPos) {
+        // This is a simplified king safety evaluation.
+        // A more complex evaluation would check for pawn shields, open files near the king, etc.
+        const surroundingSquares = [
+            { row: kingPos.row - 1, col: kingPos.col - 1 }, { row: kingPos.row - 1, col: kingPos.col }, { row: kingPos.row - 1, col: kingPos.col + 1 },
+            { row: kingPos.row, col: kingPos.col - 1 }, { row: kingPos.row, col: kingPos.col + 1 },
+            { row: kingPos.row + 1, col: kingPos.col - 1 }, { row: kingPos.row + 1, col: kingPos.col }, { row: kingPos.row + 1, col: kingPos.col + 1 },
+        ];
+
+        for (const pos of surroundingSquares) {
+            if (pos.row >= 0 && pos.row < 8 && pos.col >= 0 && pos.col < 8) {
+                const square = board[pos.row][pos.col];
+                if (!square || (square.type === 'p' && square.color !== color)) {
+                    score -= 0.1; // Penalty for open space or enemy pawns near the king
+                }
+            }
+        }
+    }
+
+    return score;
+};
+
+
+const calculateRookPositioning = (board, color) => {
+    let score = 0;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const square = board[i][j];
+            if (square && square.type === 'r' && square.color === color) {
+                let isOpenFile = true;
+                let isSemiOpenFile = true;
+                for (let k = 0; k < 8; k++) {
+                    const fileSquare = board[k][j];
+                    if (fileSquare && fileSquare.type === 'p') {
+                        isOpenFile = false;
+                        if (fileSquare.color === color) {
+                            isSemiOpenFile = false;
+                        }
+                    }
+                }
+                if (isOpenFile) {
+                    score += 0.5;
+                } else if (isSemiOpenFile) {
+                    score += 0.25;
+                }
+            }
+        }
+    }
+    return score;
+};
+
+const calculateBishopPair = (board, color) => {
+    let bishopCount = 0;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const square = board[i][j];
+            if (square && square.type === 'b' && square.color === color) {
+                bishopCount++;
+            }
+        }
+    }
+    return bishopCount >= 2 ? 0.5 : 0;
+};
+
 const evaluateBoard = (board) => {
     let score = 0;
     board.forEach((row, rowIndex) => {
@@ -84,6 +179,16 @@ const evaluateBoard = (board) => {
             }
         });
     });
+
+    score += calculatePawnStructure(board, 'w');
+    score -= calculatePawnStructure(board, 'b');
+    score += calculateKingSafety(board, 'w');
+    score -= calculateKingSafety(board, 'b');
+    score += calculateRookPositioning(board, 'w');
+    score -= calculateRookPositioning(board, 'b');
+    score += calculateBishopPair(board, 'w');
+    score -= calculateBishopPair(board, 'b');
+
     return score + (chess.in_check() ? (chess.turn() === 'w' ? -0.5 : 0.5) : 0);
 };
 
