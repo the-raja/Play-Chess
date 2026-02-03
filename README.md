@@ -25,7 +25,7 @@ A web-based, real-time multiplayer chess game built with Node.js, Express, and S
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
+    git clone https://github.com/the-raja/Play-Chess.git
     ```
 
 2.  **Navigate to the project directory:**
